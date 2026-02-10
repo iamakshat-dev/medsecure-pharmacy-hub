@@ -18,6 +18,8 @@ export default function Login() {
     e.preventDefault();
     if (role === 'pharmacist') {
       navigate('/dashboard');
+    } else if (role === 'distributor') {
+      navigate('/distributor');
     }
   };
 
