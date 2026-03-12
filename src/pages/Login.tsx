@@ -42,7 +42,7 @@ export default function Login() {
                 Med
               </h1>
               <h1 className="text-2xl font-bold text-primary" style={{ fontFamily: 'var(--font-heading)' }}>
-                Secure
+                unsecure
               </h1>
               <Lock className="h-4 w-4 text-primary" />
             </div>
