@@ -16,7 +16,7 @@ export default function DistributorLayout({ children }: { children: React.ReactN
   const navigate = useNavigate();
   const [showLogout, setShowLogout] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { isDark, toggle: toggleTheme } = useTheme();
+  const { isDark, mounted, isTransitioning, toggle: toggleTheme } = useTheme();
 
   const handleLogout = () => {
     setShowLogout(false);
@@ -65,10 +65,12 @@ export default function DistributorLayout({ children }: { children: React.ReactN
           <div className="flex items-center gap-2">
             <button
               onClick={toggleTheme}
-              className="rounded-lg p-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+              className={`rounded-lg p-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors ${
+                isTransitioning ? 'theme-toggle-animate' : ''
+              }`}
               aria-label="Toggle theme"
             >
-              {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              {mounted && isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </button>
             <Button
               variant="ghost"
