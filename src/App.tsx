@@ -1,9 +1,10 @@
+import { ReactNode } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
@@ -15,6 +16,8 @@ import DistributorLayout from "./components/DistributorLayout";
 import DistributorDashboard from "./pages/DistributorDashboard";
 import DistributorOrders from "./pages/DistributorOrders";
 import DistributorTracking from "./pages/DistributorTracking";
+import Login from "./pages/Login";
+import { isAuthenticated } from "./lib/auth";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +29,14 @@ const AuthenticationPage = () => <DashboardLayout><Authentication /></DashboardL
 const DistributorHomePage = () => <DistributorLayout><DistributorDashboard /></DistributorLayout>;
 const DistributorOrdersPage = () => <DistributorLayout><DistributorOrders /></DistributorLayout>;
 const DistributorTrackingPage = () => <DistributorLayout><DistributorTracking /></DistributorLayout>;
+
+const ProtectedRoute = ({ children }: { children: ReactNode }) => {
+  if (!isAuthenticated()) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <>{children}</>;
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -42,13 +53,14 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/dashboard/inventory" element={<InventoryPage />} />
-            <Route path="/dashboard/tracking" element={<TrackingPage />} />
-            <Route path="/dashboard/authentication" element={<AuthenticationPage />} />
-            <Route path="/distributor" element={<DistributorHomePage />} />
-            <Route path="/distributor/orders" element={<DistributorOrdersPage />} />
-            <Route path="/distributor/tracking" element={<DistributorTrackingPage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+            <Route path="/dashboard/inventory" element={<ProtectedRoute><InventoryPage /></ProtectedRoute>} />
+            <Route path="/dashboard/tracking" element={<ProtectedRoute><TrackingPage /></ProtectedRoute>} />
+            <Route path="/dashboard/authentication" element={<ProtectedRoute><AuthenticationPage /></ProtectedRoute>} />
+            <Route path="/distributor" element={<ProtectedRoute><DistributorHomePage /></ProtectedRoute>} />
+            <Route path="/distributor/orders" element={<ProtectedRoute><DistributorOrdersPage /></ProtectedRoute>} />
+            <Route path="/distributor/tracking" element={<ProtectedRoute><DistributorTrackingPage /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
