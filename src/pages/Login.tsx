@@ -1,11 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowLeft, KeyRound, Loader2, Lock, Mail, User } from 'lucide-react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { isAuthenticated, setAuthenticated } from '@/lib/auth';
 
 type AuthMode = 'login' | 'signup' | 'forgot';
 
@@ -23,38 +22,44 @@ const initialState: FormState = {
 
 export default function Login() {
   const navigate = useNavigate();
+
   const [mode, setMode] = useState<AuthMode>('login');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [form, setForm] = useState<FormState>(initialState);
 
+  const [role, setRole] = useState<'pharmacist' | 'distributor'>('pharmacist');
+
+  // ✅ FIXED AUTO REDIRECT (SAFE VERSION)
   useEffect(() => {
-    if (isAuthenticated()) {
+    const token = localStorage.getItem("token");
+    const savedRole = localStorage.getItem("role");
+    const justLoggedOut = sessionStorage.getItem("justLoggedOut");
+
+    // 🔥 prevent redirect immediately after logout
+    if (justLoggedOut === "true") {
+      sessionStorage.removeItem("justLoggedOut");
+      return;
+    }
+
+    if (!token) return;
+
+    if (savedRole === "distributor") {
+      navigate('/distributor', { replace: true });
+    } else {
       navigate('/dashboard', { replace: true });
     }
   }, [navigate]);
 
   const heading = useMemo(() => {
-    if (mode === 'signup') {
-      return 'Create your account';
-    }
-
-    if (mode === 'forgot') {
-      return 'Reset password';
-    }
-
+    if (mode === 'signup') return 'Create your account';
+    if (mode === 'forgot') return 'Reset password';
     return 'Welcome back';
   }, [mode]);
 
   const description = useMemo(() => {
-    if (mode === 'signup') {
-      return 'Sign up with username, email, and password to continue.';
-    }
-
-    if (mode === 'forgot') {
-      return 'Enter your email and we will connect you with a reset link.';
-    }
-
+    if (mode === 'signup') return 'Sign up with username, email, and password.';
+    if (mode === 'forgot') return 'Enter your email to reset password.';
     return 'Log in with your username and password.';
   }, [mode]);
 
@@ -75,197 +80,121 @@ export default function Login() {
 
     setTimeout(() => {
       if (mode === 'login') {
-        setAuthenticated(true);
-        setMessage(`Logged in successfully as ${form.username}.`);
-        navigate('/dashboard', { replace: true });
+
+        // ✅ STORE AUTH DATA
+        localStorage.setItem("token", "demo-token");
+        localStorage.setItem("role", role);
+        localStorage.setItem("user", JSON.stringify({ username: form.username }));
+
+        setMessage(`Logged in as ${form.username}`);
+
+        // ✅ ROLE BASED REDIRECT
+        if (role === "distributor") {
+          navigate('/distributor', { replace: true });
+        } else {
+          navigate('/dashboard', { replace: true });
+        }
+
       } else if (mode === 'signup') {
-        setMessage(`Account created for ${form.username}. You can now log in.`);
+        setMessage(`Account created for ${form.username}`);
       } else {
-        setMessage(`Password reset link sent to ${form.email}. Check your inbox.`);
+        setMessage(`Reset link sent to ${form.email}`);
       }
+
       setLoading(false);
     }, 1000);
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-background px-4 py-10 text-foreground sm:px-6 lg:px-8">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="medical-grid absolute inset-0 opacity-40" />
-        <div className="medical-orb absolute -left-16 top-24 h-56 w-56 animate-pulse-soft" />
-        <div className="medical-orb medical-orb-secondary absolute right-0 top-16 h-72 w-72 animate-float" />
-      </div>
+    <div className="min-h-screen flex items-center justify-center bg-background px-4">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <Link to="/" className="flex items-center gap-2 text-sm text-muted-foreground">
+            <ArrowLeft className="h-4 w-4" /> Back
+          </Link>
+          <CardTitle>{heading}</CardTitle>
+          <CardDescription>{description}</CardDescription>
+        </CardHeader>
 
-      <div className="relative z-10 mx-auto max-w-5xl">
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 rounded-full border border-border bg-card/70 px-4 py-2 text-sm text-muted-foreground backdrop-blur-sm transition-colors hover:text-foreground"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to Home
-        </Link>
+        <CardContent>
+          <form className="space-y-4" onSubmit={handleSubmit}>
 
-        <div className="mt-8 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-          <Card className="glass border-border/60 shadow-card">
-            <CardHeader>
-              <CardTitle className="text-3xl text-secondary" style={{ fontFamily: 'var(--font-heading)' }}>
-                Secure access for your pharmacy team
-              </CardTitle>
-              <CardDescription className="text-base leading-7">
-                Use one workflow for login, new user registration, and password recovery, all with the same trusted
-                MedSecure experience.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4 text-sm text-muted-foreground">
-              <div className="rounded-2xl border border-primary/15 bg-primary/5 p-4">
-                <p className="font-medium text-foreground">Login</p>
-                <p className="mt-1">Username and password for existing users.</p>
+            {mode !== 'forgot' && (
+              <div>
+                <Label>Username</Label>
+                <Input
+                  value={form.username}
+                  onChange={(e) => updateField('username', e.target.value)}
+                />
               </div>
-              <div className="rounded-2xl border border-primary/15 bg-primary/5 p-4">
-                <p className="font-medium text-foreground">Sign Up</p>
-                <p className="mt-1">Username, email, and password for new users.</p>
+            )}
+
+            {(mode === 'signup' || mode === 'forgot') && (
+              <div>
+                <Label>Email</Label>
+                <Input
+                  type="email"
+                  value={form.email}
+                  onChange={(e) => updateField('email', e.target.value)}
+                />
               </div>
-              <div className="rounded-2xl border border-primary/15 bg-primary/5 p-4">
-                <p className="font-medium text-foreground">Forgot Password</p>
-                <p className="mt-1">Reset link sent to the registered email address.</p>
+            )}
+
+            {mode !== 'forgot' && (
+              <div>
+                <Label>Password</Label>
+                <Input
+                  type="password"
+                  value={form.password}
+                  onChange={(e) => updateField('password', e.target.value)}
+                />
               </div>
-            </CardContent>
-          </Card>
+            )}
 
-          <Card className="glass border-border/60 shadow-card">
-            <CardHeader>
-              <div className="inline-flex w-fit items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-                Authentication
-              </div>
-              <CardTitle className="mt-3 text-2xl text-secondary" style={{ fontFamily: 'var(--font-heading)' }}>
-                {heading}
-              </CardTitle>
-              <CardDescription>{description}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="mb-5 grid grid-cols-3 gap-2 rounded-xl border border-border bg-muted/40 p-1">
-                <button
-                  type="button"
-                  onClick={() => switchMode('login')}
-                  className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                    mode === 'login' ? 'gradient-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  Login
-                </button>
-                <button
-                  type="button"
-                  onClick={() => switchMode('signup')}
-                  className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                    mode === 'signup' ? 'gradient-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  Sign Up
-                </button>
-                <button
-                  type="button"
-                  onClick={() => switchMode('forgot')}
-                  className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                    mode === 'forgot' ? 'gradient-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  Forgot
-                </button>
-              </div>
+            {/* ROLE SELECTOR */}
+            {mode === 'login' && (
+              <div className="space-y-2">
+                <Label>Select Role</Label>
 
-              <form className="space-y-4" onSubmit={handleSubmit}>
-                {mode !== 'forgot' && (
-                  <div className="space-y-2">
-                    <Label htmlFor="username">Username</Label>
-                    <div className="relative">
-                      <User className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                      <Input
-                        id="username"
-                        required
-                        value={form.username}
-                        onChange={(event) => updateField('username', event.target.value)}
-                        placeholder="Enter username"
-                        className="pl-10"
-                      />
-                    </div>
-                  </div>
-                )}
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant={role === 'pharmacist' ? 'default' : 'outline'}
+                    className="w-full"
+                    onClick={() => setRole('pharmacist')}
+                  >
+                    Pharmacist
+                  </Button>
 
-                {(mode === 'signup' || mode === 'forgot') && (
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <div className="relative">
-                      <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                      <Input
-                        id="email"
-                        type="email"
-                        required
-                        value={form.email}
-                        onChange={(event) => updateField('email', event.target.value)}
-                        placeholder="name@example.com"
-                        className="pl-10"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {mode !== 'forgot' && (
-                  <div className="space-y-2">
-                    <Label htmlFor="password">Password</Label>
-                    <div className="relative">
-                      <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                      <Input
-                        id="password"
-                        type="password"
-                        required
-                        value={form.password}
-                        onChange={(event) => updateField('password', event.target.value)}
-                        placeholder="Enter password"
-                        className="pl-10"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                <Button
-                  type="submit"
-                  className="h-11 w-full gradient-primary text-primary-foreground"
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Processing...
-                    </>
-                  ) : (
-                    <>
-                      {mode === 'login' && 'Login'}
-                      {mode === 'signup' && 'Create Account'}
-                      {mode === 'forgot' && 'Send Reset Email'}
-                    </>
-                  )}
-                </Button>
-              </form>
-
-              {mode === 'login' && (
-                <button
-                  type="button"
-                  onClick={() => switchMode('forgot')}
-                  className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
-                >
-                  <KeyRound className="h-4 w-4" />
-                  Forgot password?
-                </button>
-              )}
-
-              {message && (
-                <div className="mt-4 rounded-xl border border-secondary/20 bg-secondary/10 px-4 py-3 text-sm text-secondary">
-                  {message}
+                  <Button
+                    type="button"
+                    variant={role === 'distributor' ? 'default' : 'outline'}
+                    className="w-full"
+                    onClick={() => setRole('distributor')}
+                  >
+                    Distributor
+                  </Button>
                 </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+              </div>
+            )}
+
+            <Button type="submit" className="w-full">
+              {loading ? <Loader2 className="animate-spin" /> : 'Submit'}
+            </Button>
+          </form>
+
+          {mode === 'login' && (
+            <button
+              onClick={() => switchMode('forgot')}
+              className="text-sm mt-2 text-primary"
+            >
+              Forgot password?
+            </button>
+          )}
+
+          {message && <p className="mt-3 text-sm">{message}</p>}
+        </CardContent>
+      </Card>
     </div>
   );
 }
