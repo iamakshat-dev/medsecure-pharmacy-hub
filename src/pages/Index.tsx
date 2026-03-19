@@ -123,6 +123,9 @@ export default function Index() {
 									Hospital-grade trust
 								</Badge>
 								<Button asChild variant="ghost" className="rounded-full px-5 text-sm text-foreground hover:bg-card/70">
+									<Link to="/login">Login</Link>
+								</Button>
+								<Button asChild variant="ghost" className="rounded-full px-5 text-sm text-foreground hover:bg-card/70">
 									<Link to="/dashboard">Open Dashboard</Link>
 								</Button>
 								</div>
