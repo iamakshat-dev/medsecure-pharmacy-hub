@@ -1,8 +1,13 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Home, Package, Truck, ShieldCheck, LogOut, Pill, Lock, Menu, X, Sun, Moon } from 'lucide-react';
+import React, { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Home, Package, Truck, ShieldCheck, LogOut, Pill, Lock, Menu, X, Sun, Moon } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import LoginForm from './LoginForm';
+import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/hooks/useTheme';
 
 const navItems = [
@@ -17,9 +22,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const navigate = useNavigate();
   const [showLogout, setShowLogout] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
+  const { user, logout } = useAuth();
   const { isDark, mounted, isTransitioning, toggle: toggleTheme } = useTheme();
 
   const handleLogout = () => {
+    logout();
     setShowLogout(false);
     navigate('/');
   };
@@ -39,6 +47,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <Lock className="h-3.5 w-3.5 text-primary" />
             </div>
           </Link>
+
+          {!user && (
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => setShowLogin(true)} 
+              className="ml-4"
+            >
+              Login
+            </Button>
+          )}
 
           {/* Desktop nav */}
           <div className="hidden items-center gap-1 md:flex">
@@ -74,15 +93,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             >
               {mounted && isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowLogout(true)}
-              className="hidden text-muted-foreground hover:text-destructive md:flex"
-            >
-              <LogOut className="mr-2 h-4 w-4" />
-              Logout
-            </Button>
+            {user && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowLogout(true)}
+                className="hidden text-muted-foreground hover:text-destructive md:flex"
+              >
+                <LogOut className="mr-2 h-4 w-4" />
+                Logout
+              </Button>
+            )}
 
             <button
               className="rounded-lg p-2 text-muted-foreground hover:bg-accent md:hidden"
