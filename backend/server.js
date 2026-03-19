@@ -25,17 +25,22 @@ db.connect((err) => {
   }
   console.log("Connected to MySQL");
 });
+
+/* =========================
+   UTIL
+========================= */
+
 const formatDate = (date) => {
-    return date ? new Date(date).toISOString().split("T")[0] : null;
-  };
+  return date ? new Date(date).toISOString().split("T")[0] : null;
+};
+
 /* =========================
    ROUTES
 ========================= */
 
 // ✅ GET all medicines
 app.get("/api/medicines", (req, res) => {
-  
-    db.query("SELECT * FROM medicines", (err, results) => {
+  db.query("SELECT * FROM medicines", (err, results) => {
     if (err) {
       console.error("GET ERROR:", err);
       return res.status(500).json(err);
@@ -44,11 +49,12 @@ app.get("/api/medicines", (req, res) => {
   });
 });
 
-
 // ✅ ADD new medicine
 app.post("/api/medicines", (req, res) => {
   const { name, batch, stock, price, expiry } = req.body;
+
   const formattedDate = formatDate(expiry);
+
   const sql = `
     INSERT INTO medicines (name, batch, stock, price, expiry)
     VALUES (?, ?, ?, ?, ?)
@@ -60,6 +66,8 @@ app.post("/api/medicines", (req, res) => {
       return res.status(500).json(err);
     }
 
+    console.log("INSERT SUCCESS");
+
     res.status(201).json({
       message: "Medicine added successfully",
       id: result.insertId
@@ -67,11 +75,12 @@ app.post("/api/medicines", (req, res) => {
   });
 });
 
-
-// ✅ UPDATE full medicine record
+// ✅ UPDATE medicine (FIXED DATE)
 app.put("/api/medicines/:id", (req, res) => {
   const { id } = req.params;
   const { name, batch, stock, price, expiry } = req.body;
+
+  const formattedDate = formatDate(expiry); // ✅ FIX
 
   const sql = `
     UPDATE medicines 
@@ -81,7 +90,7 @@ app.put("/api/medicines/:id", (req, res) => {
 
   db.query(
     sql,
-    [name, batch, stock, price, expiry, id],
+    [name, batch, stock, price, formattedDate, id],
     (err, result) => {
       if (err) {
         console.error("PUT ERROR:", err);
@@ -92,43 +101,34 @@ app.put("/api/medicines/:id", (req, res) => {
         return res.status(404).json({ message: "Medicine not found" });
       }
 
+      console.log("UPDATE SUCCESS");
+
       res.json({ message: "Medicine updated successfully" });
     }
   );
 });
 
+// ✅ DELETE medicine (FIXED ROUTE)
+app.delete("/api/medicines/:id", (req, res) => {
+  const { id } = req.params;
 
-// ✅ DELETE medicine
-app.put("/api/medicines/:id", (req, res) => {
-    const { id } = req.params;
-    const { name, batch, stock, price, expiry } = req.body;
-  
-    const formattedDate = formatDate(expiry);
-  
-    const sql = `
-      UPDATE medicines 
-      SET name = ?, batch = ?, stock = ?, price = ?, expiry = ?
-      WHERE id = ?
-    `;
-  
-    db.query(
-      sql,
-      [name, batch, stock, price, formattedDate, id],
-      (err, result) => {
-        if (err) {
-          console.error("PUT ERROR:", err);
-          return res.status(500).json(err);
-        }
-  
-        if (result.affectedRows === 0) {
-          return res.status(404).json({ message: "Medicine not found" });
-        }
-  
-        res.json({ message: "Medicine updated successfully" });
-      }
-    );
+  const sql = "DELETE FROM medicines WHERE id = ?";
+
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      console.error("DELETE ERROR:", err);
+      return res.status(500).json(err);
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Medicine not found" });
+    }
+
+    console.log("DELETE SUCCESS");
+
+    res.json({ message: "Medicine deleted successfully" });
   });
-
+});
 
 /* =========================
    SERVER START
