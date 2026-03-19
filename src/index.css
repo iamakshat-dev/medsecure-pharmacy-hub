@@ -1,7 +1,7 @@
 /* ============================= */
 /* Google Fonts MUST come first  */
 /* ============================= */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap');
 
 /* ============================= */
 /* Tailwind Directives           */
@@ -15,67 +15,84 @@
 /* ============================= */
 @layer base {
   :root {
-    --background: 150 20% 98%;
-    --foreground: 160 25% 12%;
+    --background: 180 25% 97%;
+    --foreground: 197 40% 12%;
     --card: 0 0% 100%;
-    --card-foreground: 160 25% 12%;
+    --card-foreground: 197 40% 12%;
     --popover: 0 0% 100%;
-    --popover-foreground: 160 25% 12%;
-    --primary: 155 65% 38%;
+    --popover-foreground: 197 40% 12%;
+    --primary: 183 79% 28%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 165 55% 32%;
+    --secondary: 198 58% 18%;
     --secondary-foreground: 0 0% 100%;
-    --muted: 150 15% 94%;
-    --muted-foreground: 160 12% 48%;
-    --accent: 155 30% 90%;
-    --accent-foreground: 155 65% 30%;
+    --muted: 180 16% 92%;
+    --muted-foreground: 194 16% 40%;
+    --accent: 170 42% 88%;
+    --accent-foreground: 183 79% 24%;
     --destructive: 0 72% 55%;
     --destructive-foreground: 0 0% 100%;
-    --border: 155 18% 88%;
-    --input: 155 18% 88%;
-    --ring: 155 65% 38%;
-    --radius: 0.75rem;
+    --border: 186 24% 84%;
+    --input: 186 24% 84%;
+    --ring: 183 79% 28%;
+    --radius: 1rem;
 
-    --sidebar-background: 150 15% 97%;
-    --sidebar-foreground: 160 20% 25%;
-    --sidebar-primary: 155 65% 38%;
+    --sidebar-background: 180 20% 98%;
+    --sidebar-foreground: 197 32% 22%;
+    --sidebar-primary: 183 79% 28%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 155 20% 93%;
-    --sidebar-accent-foreground: 155 65% 30%;
-    --sidebar-border: 155 18% 88%;
-    --sidebar-ring: 155 65% 38%;
+    --sidebar-accent: 180 26% 92%;
+    --sidebar-accent-foreground: 183 79% 24%;
+    --sidebar-border: 186 24% 84%;
+    --sidebar-ring: 183 79% 28%;
 
-    --gradient-primary: linear-gradient(135deg, hsl(155 65% 38%), hsl(175 60% 35%));
-    --gradient-bg: linear-gradient(135deg, hsl(155 40% 95%), hsl(175 40% 93%));
-    --gradient-glass: linear-gradient(135deg, hsla(0,0%,100%,0.85), hsla(0,0%,100%,0.45));
-    --shadow-card: 0 4px 24px -4px hsla(155, 50%, 30%, 0.08);
-    --shadow-card-hover: 0 12px 32px -8px hsla(155, 50%, 30%, 0.16);
-    --shadow-glow: 0 0 24px hsla(155, 65%, 38%, 0.25);
+    --gradient-primary: linear-gradient(135deg, hsl(183 79% 28%), hsl(198 72% 18%));
+    --gradient-accent: linear-gradient(135deg, hsl(170 56% 78%), hsl(188 64% 74%));
+    --gradient-bg: radial-gradient(circle at top left, hsla(182, 65%, 86%, 0.95), transparent 34%), radial-gradient(circle at top right, hsla(199, 60%, 88%, 0.9), transparent 28%), linear-gradient(180deg, hsl(180 29% 98%), hsl(180 18% 94%));
+    --gradient-glass: linear-gradient(180deg, hsla(0, 0%, 100%, 0.82), hsla(0, 0%, 100%, 0.62));
+    --shadow-card: 0 18px 60px -28px hsla(193, 55%, 20%, 0.24);
+    --shadow-card-hover: 0 28px 80px -34px hsla(193, 55%, 18%, 0.34);
+    --shadow-glow: 0 0 40px hsla(183, 79%, 28%, 0.18);
 
-    --font-heading: 'Poppins', sans-serif;
-    --font-body: 'Inter', sans-serif;
+    --font-heading: 'Sora', sans-serif;
+    --font-body: 'Manrope', sans-serif;
   }
 
   .dark {
-    --background: 160 20% 6%;
-    --foreground: 150 15% 92%;
-    --card: 160 20% 10%;
-    --card-foreground: 150 15% 92%;
-    --popover: 160 20% 10%;
-    --popover-foreground: 150 15% 92%;
-    --primary: 155 65% 45%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 165 55% 38%;
+    --background: 199 42% 7%;
+    --foreground: 180 20% 92%;
+    --card: 197 38% 10%;
+    --card-foreground: 180 20% 92%;
+    --popover: 197 38% 10%;
+    --popover-foreground: 180 20% 92%;
+    --primary: 182 63% 52%;
+    --primary-foreground: 199 42% 8%;
+    --secondary: 198 46% 20%;
     --secondary-foreground: 0 0% 100%;
-    --muted: 160 18% 16%;
-    --muted-foreground: 150 12% 55%;
-    --accent: 160 20% 18%;
-    --accent-foreground: 155 60% 55%;
+    --muted: 199 22% 16%;
+    --muted-foreground: 186 14% 66%;
+    --accent: 191 30% 18%;
+    --accent-foreground: 182 63% 62%;
     --destructive: 0 62% 40%;
     --destructive-foreground: 0 0% 100%;
-    --border: 160 15% 18%;
-    --input: 160 15% 18%;
-    --ring: 155 65% 45%;
+    --border: 198 24% 20%;
+    --input: 198 24% 20%;
+    --ring: 182 63% 52%;
+    --gradient-primary: linear-gradient(135deg, hsl(182 63% 52%), hsl(198 52% 36%));
+    --gradient-accent: linear-gradient(135deg, hsl(192 34% 28%), hsl(201 30% 24%));
+    --gradient-bg: radial-gradient(circle at top left, hsla(189, 55%, 18%, 0.72), transparent 34%), radial-gradient(circle at top right, hsla(201, 48%, 18%, 0.68), transparent 28%), linear-gradient(180deg, hsl(199 34% 8%), hsl(200 30% 6%));
+    --gradient-glass: linear-gradient(180deg, hsla(199, 26%, 18%, 0.75), hsla(199, 26%, 12%, 0.62));
+    --shadow-card: 0 20px 64px -30px hsla(197, 60%, 2%, 0.65);
+    --shadow-card-hover: 0 30px 90px -36px hsla(197, 60%, 1%, 0.82);
+    --shadow-glow: 0 0 40px hsla(182, 63%, 52%, 0.2);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  html,
+  body {
+    transition: background-color 0.35s ease, color 0.35s ease, background-image 0.35s ease;
   }
 
   * {
@@ -85,10 +102,92 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-body);
+    min-height: 100vh;
+    background-image: var(--gradient-bg);
+    text-rendering: optimizeLegibility;
+  }
+
+  #root {
+    min-height: 100vh;
+  }
+
+  ::selection {
+    background: hsl(var(--primary) / 0.18);
+    color: hsl(var(--foreground));
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes heartbeat {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes theme-fade-in {
+  0% {
+    opacity: 0.92;
+    filter: saturate(0.92);
+  }
+
+  100% {
+    opacity: 1;
+    filter: saturate(1);
+  }
+}
+
+@keyframes theme-toggle-pop {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  45% {
+    transform: rotate(90deg) scale(0.78);
+  }
+
+  100% {
+    transform: rotate(180deg) scale(1);
   }
 }
 
@@ -107,6 +206,10 @@
     background: var(--gradient-primary);
   }
 
+  .gradient-accent {
+    background: var(--gradient-accent);
+  }
+
   .shadow-card {
     box-shadow: var(--shadow-card);
   }
@@ -119,4 +222,107 @@
     transform: translateY(-4px) scale(1.01);
     box-shadow: var(--shadow-card-hover);
   }
+
+  .animate-fade-up {
+    animation: fade-up 0.7s ease-out both;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-pulse-soft {
+    animation: pulse-soft 4s ease-in-out infinite;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .medical-grid {
+    background-image:
+      linear-gradient(to right, rgba(14, 116, 144, 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(14, 116, 144, 0.08) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: radial-gradient(circle at center, black 38%, transparent 92%);
+  }
+
+  .medical-orb {
+    border-radius: 9999px;
+    background: radial-gradient(circle at 35% 35%, rgba(103, 232, 249, 0.45), rgba(255, 255, 255, 0.04) 64%);
+    filter: blur(14px);
+  }
+
+  .medical-orb-secondary {
+    background: radial-gradient(circle at 50% 50%, rgba(45, 212, 191, 0.28), rgba(255, 255, 255, 0.02) 66%);
+  }
+
+  .medical-orb-tertiary {
+    background: radial-gradient(circle at 50% 50%, rgba(125, 211, 252, 0.32), rgba(255, 255, 255, 0.02) 66%);
+  }
+
+  .dna-strand {
+    opacity: 0.45;
+    background:
+      radial-gradient(circle, rgba(45, 212, 191, 0.42) 0 5px, transparent 6px) 0 0 / 16px 68px repeat-y,
+      radial-gradient(circle, rgba(56, 189, 248, 0.36) 0 5px, transparent 6px) 100% 16px / 16px 68px repeat-y,
+      linear-gradient(135deg, transparent 43%, rgba(14, 116, 144, 0.2) 44% 56%, transparent 57%) center / 100% 68px repeat-y,
+      linear-gradient(45deg, transparent 43%, rgba(20, 184, 166, 0.2) 44% 56%, transparent 57%) center / 100% 68px repeat-y;
+  }
+
+  .capsule-float {
+    width: 124px;
+    height: 54px;
+    border-radius: 9999px;
+    transform: rotate(-22deg);
+    background: linear-gradient(90deg, rgba(20, 184, 166, 0.9) 0 50%, rgba(255, 255, 255, 0.95) 50% 100%);
+    box-shadow: 0 24px 54px -28px rgba(14, 116, 144, 0.42);
+    opacity: 0.72;
+  }
+
+  .capsule-float::after {
+    content: '';
+    position: absolute;
+    inset: 7px;
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+  }
+
+  .pulse-track {
+    position: relative;
+    overflow: hidden;
+    height: 42px;
+    border-radius: 9999px;
+    background: linear-gradient(180deg, rgba(236, 253, 245, 0.7), rgba(224, 242, 254, 0.55));
+  }
+
+  .pulse-line {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 80' preserveAspectRatio='none'%3E%3Cpath d='M0 40h90l22-20 24 42 30-54 28 70 20-38h70l28-18 18 35 20-12h80l20-24 24 50 22-34h98' fill='none' stroke='%230f766e' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: repeat-x;
+    background-size: 800px 80px;
+    animation: heartbeat 5.4s linear infinite;
+  }
+
+  .theme-toggle-animate {
+    box-shadow: 0 0 0 1px hsl(var(--primary) / 0.3), 0 10px 22px -14px hsl(var(--primary) / 0.55);
+  }
+
+  .theme-toggle-animate svg {
+    animation: theme-toggle-pop 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+}
+
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow, background-image;
+  transition-duration: 0.35s;
+  transition-timing-function: ease;
+}
+
+html.theme-transition body {
+  animation: theme-fade-in 0.35s ease;
 }
