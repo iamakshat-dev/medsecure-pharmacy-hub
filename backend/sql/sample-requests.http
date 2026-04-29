@@ -1,0 +1,77 @@
+### 1. Register manufacturer
+POST http://localhost:3000/api/users/register
+Content-Type: application/json
+
+{
+  "name": "Acme Biopharma",
+  "role": "manufacturer"
+}
+
+### 2. Register distributor
+POST http://localhost:3000/api/users/register
+Content-Type: application/json
+
+{
+  "name": "North Logistics Hub",
+  "role": "distributor"
+}
+
+### 3. Register pharmacy
+POST http://localhost:3000/api/users/register
+Content-Type: application/json
+
+{
+  "name": "City Pharmacy",
+  "role": "pharmacy"
+}
+
+### 4. Create medicine
+POST http://localhost:3000/api/medicine-catalog
+Content-Type: application/json
+
+{
+  "name": "Paracetamol 500mg",
+  "manufacturerId": 1
+}
+
+### 5. Create batch
+POST http://localhost:3000/api/batch/create
+Content-Type: application/json
+
+{
+  "batchId": "BAT-2026-001",
+  "medicineId": 1,
+  "quantity": 2400,
+  "manufactureDate": "2026-04-01",
+  "expiryDate": "2027-04-01",
+  "actorId": 1
+}
+
+### 6. Transfer manufacturer -> distributor
+POST http://localhost:3000/api/batch/transfer
+Content-Type: application/json
+
+{
+  "batchId": "BAT-2026-001",
+  "fromActorId": 1,
+  "toActorId": 2
+}
+
+### 7. Transfer distributor -> pharmacy
+POST http://localhost:3000/api/batch/transfer
+Content-Type: application/json
+
+{
+  "batchId": "BAT-2026-001",
+  "fromActorId": 2,
+  "toActorId": 3
+}
+
+### 8. Verify batch integrity
+GET http://localhost:3000/api/batch/verify/BAT-2026-001
+
+### 9. Get full history
+GET http://localhost:3000/api/batch/history/BAT-2026-001
+
+### 10. Inventory compatibility view
+GET http://localhost:3000/api/inventory
